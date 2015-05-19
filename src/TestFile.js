@@ -9,36 +9,37 @@ var BackgroundLayer = cc.Layer.extend({
     ctor: function (space) {
         this._super();
 
-
+        // clean old array here
         this.objects = [];
         this.space = space;
+
         this.init();
     },
     init: function () {
         this._super();
 
-        this.map00 = new cc.TMXTiledMap.create(res.map00_tmx);
+        this.map00 = new cc.TMXTiledMap(res.map00_tmx);
         this.addChild(this.map00);
 
         this.mapWidth = this.map00.getContentSize().width;
 
-        this.map01 = new cc.TMXTiledMap.create(res.map01_tmx);
+        this.map01 = new cc.TMXTiledMap(res.map01_tmx);
         this.map01.setPosition(cc.p(this.mapWidth, 0));
         this.addChild(this.map01);
 
-        //create spritesheet
+        // create sprite sheet
         cc.spriteFrameCache.addSpriteFrames(res.background_plist);
         this.spriteSheet = new cc.SpriteBatchNode(res.background_png);
         this.addChild(this.spriteSheet);
 
-//        console.log(this.map00);
+
         this.loadObjects(this.map00, 0);
-//        this.loadObjects(this.map01, 1);
+        this.loadObjects(this.map01, 1);
 
         this.scheduleUpdate();
     },
     loadObjects: function (map, mapIndex) {
-        //add coins
+        // add coins
         var coinGroup = map.getObjectGroup("coin");
         var coinArray = coinGroup.getObjects();
         for (var i = 0; i < coinArray.length; i++) {
@@ -49,7 +50,7 @@ var BackgroundLayer = cc.Layer.extend({
             this.objects.push(coin);
         }
 
-        //add rock
+        // add rock
         var rockGroup = map.getObjectGroup("rock");
         var rockArray = rockGroup.getObjects();
         for (var i = 0; i < rockArray.length; i++) {
@@ -65,25 +66,29 @@ var BackgroundLayer = cc.Layer.extend({
         if (this.mapWidth == newMapIndex) {
             return false;
         }
+
         if (0 == newMapIndex % 2) {
-            //change mapSecond
+            // change mapSecond
             this.map01.setPositionX(this.mapWidth * (newMapIndex + 1));
             this.loadObjects(this.map01, newMapIndex + 1);
+
         } else {
-            //change mapFirst
+            // change mapFirst
             this.map00.setPositionX(this.mapWidth * (newMapIndex + 1));
             this.loadObjects(this.map00, newMapIndex + 1);
+
         }
+
         this.removeObjects(newMapIndex - 1);
         this.mapIndex = newMapIndex;
+
         return true;
-
-
     },
     update: function (dt) {
         var animationLayer = this.getParent().getChildByTag(TagOfLayer.Animation);
         var eyeX = animationLayer.getEyeX();
         this.checkAndReload(eyeX);
+
     },
     removeObjects: function (mapIndex) {
         while ((function (obj, index) {
@@ -106,5 +111,5 @@ var BackgroundLayer = cc.Layer.extend({
                 break;
             }
         }
-    },
+    }
 });

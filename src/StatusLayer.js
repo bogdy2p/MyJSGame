@@ -7,6 +7,7 @@
 var StatusLayer = cc.Layer.extend({
     labelCoin: null,
     labelMeter: null,
+    labelName: null,
     coins: 0,
     ctor: function () {
         this._super();
@@ -27,5 +28,19 @@ var StatusLayer = cc.Layer.extend({
         this.labelMeter.setPosition(cc.p(winsize.width - 70, winsize.height - 20));
         this.addChild(this.labelMeter);
 
+
+        this.labelName = new cc.LabelTTF("Name of the Game", "Arial", 26);
+        this.labelName.setPosition(cc.p(winsize.width / 2 - 10, winsize.height - 50));
+        this.addChild(this.labelName);
+
+
+
+    },
+    updateMeter: function (px) {
+        this.labelMeter.setString(parseInt(px / 10) + "M");
+    },
+    addCoin: function (num) {
+        this.coins += num;
+        this.labelCoin.setString("Coins:" + this.coins);
     }
 });

@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 
 var AnimationLayer = cc.Layer.extend({
@@ -19,9 +13,9 @@ var AnimationLayer = cc.Layer.extend({
         this.space = space;
 
         this._debugNode = new cc.PhysicsDebugNode(this.space);
-        this._debugNode.setVisible(false);
+        this._debugNode.setVisible(true);
         this.addChild(this._debugNode, 10);
-        
+
         this.init();
 
     },
@@ -46,11 +40,6 @@ var AnimationLayer = cc.Layer.extend({
 
         var animation = new cc.Animation(animFrames, 0.1);
         this.runningAction = new cc.RepeatForever(new cc.Animate(animation));
-//        this.sprite = new cc.Sprite("#runner0.png");
-//        this.sprite.attr({x: 80, y: 85});
-//        this.sprite.runAction(this.runningAction);
-//        this.spriteSheet.addChild(this.sprite);
-
 
         this.sprite = new cc.PhysicsSprite("#runner0.png");
         var contentSize = this.sprite.getContentSize();
@@ -75,7 +64,14 @@ var AnimationLayer = cc.Layer.extend({
 
 
     },
-    getEyeX:function(){
+    update: function (dt) {
+        var statusLayer = this.getParent().getChildByTag(TagOfLayer.Status);
+        statusLayer.updateMeter(this.sprite.getPositionX() - g_runnerStartX);
+        
+//        var vel = 
+        
+    },
+    getEyeX: function () {
         return this.sprite.getPositionX() - g_runnerStartX;
     },
 });
